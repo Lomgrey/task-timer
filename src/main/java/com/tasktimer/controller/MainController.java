@@ -19,19 +19,17 @@ import static com.tasktimer.util.DurationFX.toFormatView;
 import static java.lang.String.format;
 
 public class MainController {
-    @FXML
-    public Label timerLabel;
-    @FXML
-    public Button controlBtn;
-    @FXML
-    public Button resetBtn;
 
+    public Label timerLabel;
+    public Button controlBtn;
+    public Button resetBtn;
     public TextArea timePointArea;
 
     public AnchorPane anchorPane;
     public HBox hbox;
 
     private boolean timerRun = false;
+    private Duration lastLap = Duration.ZERO;
 
     private StopwatchFX stopwatch;
     private TimePointMachine<Duration> timePointMachine;
@@ -63,7 +61,7 @@ public class MainController {
     public void stopwatchControl(MouseEvent event) {
         if (timerRun) {
             controlBtn.setText("Start");
-            Duration stopPoint = stopwatch.stop();
+            var stopPoint = stopwatch.stop();
             timePointMachine.addPoint(stopPoint);
         } else {
             controlBtn.setText("Stop");
