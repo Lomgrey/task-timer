@@ -1,10 +1,14 @@
 package com.tasktimer.stopwatch;
 
+import javafx.util.Duration;
+
 public interface Stopwatch {
 
-    void start();
+    Duration start();
 
-    void stop();
+    Duration start(Duration startPoint);
+
+    Duration stop();
 
     void reset();
 
