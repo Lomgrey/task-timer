@@ -1,19 +1,13 @@
 package com.tasktimer.util;
 
-import com.tasktimer.config.StopwatchConfig;
 import javafx.util.Duration;
 
-import java.text.SimpleDateFormat;
-import java.time.LocalDateTime;
 import java.time.LocalTime;
 import java.time.format.DateTimeFormatter;
 
 public class DurationFX extends Duration {
-    /**
-     * Creates a new Duration with potentially fractional millisecond resolution.
-     *
-     * @param millis The number of milliseconds
-     */
+    static DateTimeFormatter formatter = DateTimeFormatter.ofPattern("H:mm:ss.S");
+
     public DurationFX(double millis) {
         super(millis);
     }
@@ -21,8 +15,6 @@ public class DurationFX extends Duration {
     public String toFormatView(){
         return toFormatView(this);
     }
-
-    static DateTimeFormatter formatter = DateTimeFormatter.ofPattern("H:mm:ss.S");
 
     public static String toFormatView(Duration time) {
         int hour = (int) time.toHours() % 10;
