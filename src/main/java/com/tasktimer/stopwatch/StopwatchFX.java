@@ -5,6 +5,8 @@ import javafx.animation.Timeline;
 import javafx.scene.control.Label;
 import javafx.util.Duration;
 
+import java.util.function.Consumer;
+
 import static com.tasktimer.util.DurationFX.toFormatView;
 
 public class StopwatchFX implements Stopwatch {
@@ -54,5 +56,12 @@ public class StopwatchFX implements Stopwatch {
     public void reset() {
         timeline.stop();
         time = Duration.ZERO;
+    }
+
+    @Override
+    public void bindTime(Consumer<Duration> bindConsumer) {
+        stopwatchLabel.textProperty().addListener((observable, oldValue, newValue) -> {
+            bindConsumer.accept(time);
+        });
     }
 }

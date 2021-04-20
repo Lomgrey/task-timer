@@ -25,15 +25,8 @@ public class TaskTimerApp extends Application {
 
         stage.setTitle(APP_NAME);
         Scene scene = new Scene(root, INIT_ROOT_WIDTH, INIT_ROOT_HEIGHT);
+        scene.getStylesheets().add(getClass().getClassLoader().getResource("default.css").toExternalForm());
         stage.setScene(scene);
         stage.show();
-
-//        stage.widthProperty().addListener((obs, oldVal, newVal) -> {
-//            System.out.println("width" + newVal);
-//        });
-//
-//        stage.heightProperty().addListener((obs, oldVal, newVal) -> {
-//            System.out.println("height" + newVal);
-//        });
     }
 }

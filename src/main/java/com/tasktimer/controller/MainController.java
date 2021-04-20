@@ -1,9 +1,10 @@
 package com.tasktimer.controller;
 
-import com.tasktimer.repository.InMemoryTimePointMachine;
-import com.tasktimer.repository.TimePointMachine;
+import com.tasktimer.repository.InMemoryLapsRepository;
+import com.tasktimer.repository.InMemoryTimePointRepository;
+import com.tasktimer.repository.LapsRepository;
+import com.tasktimer.repository.TimePointRepository;
 import com.tasktimer.stopwatch.StopwatchFX;
-import javafx.fxml.FXML;
 import javafx.scene.control.Button;
 import javafx.scene.control.Label;
 import javafx.scene.control.TextArea;
@@ -23,31 +24,40 @@ public class MainController {
     public Label timerLabel;
     public Button controlBtn;
     public Button resetBtn;
-    public TextArea timePointArea;
+    public TextArea lapsTextArea;
 
     public AnchorPane anchorPane;
     public HBox hbox;
+    public Label currentLapLabel;
 
     private boolean timerRun = false;
     private Duration lastLap = Duration.ZERO;
 
     private StopwatchFX stopwatch;
-    private TimePointMachine<Duration> timePointMachine;
+    private TimePointRepository<Duration> timePointRepository;
+    private LapsRepository<Duration> lapsRepository;
 
     public void initialize() {
         stopwatch = new StopwatchFX(timerLabel);
-        timePointMachine = new InMemoryTimePointMachine();
+        timePointRepository = new InMemoryTimePointRepository();
+        lapsRepository = new InMemoryLapsRepository<>();
 
         registryTimePointsAreaUpdate();
         registryResize();
+
+        stopwatch.bindTime(currentDuration -> {
+            currentLapLabel.setText(toFormatView(currentDuration.subtract(lastLap)));
+        });
     }
 
     private void registryTimePointsAreaUpdate() {
-        timePointMachine.addListener((fullList, newVal) -> {
+        lapsRepository.addListener((fullList, newVal) -> {
+//            lapsTextArea.appendText(format("Lap %d:\t%s\n", fullList.size(), toFormatView(newVal)));
             var formattedPoints = EntryStream.of(List.copyOf(fullList))
                     .mapKeyValue((i, d) -> format("Lap %d:\t%s", i+1, toFormatView(d)))
                     .toList();
-            timePointArea.setText(String.join("\n", formattedPoints));
+            lapsTextArea.setText(String.join("\n", formattedPoints) + "\n"); // todo: fix it for scroll down
+            lapsTextArea.setScrollTop(Double.MAX_VALUE);
         });
     }
 
@@ -59,19 +69,32 @@ public class MainController {
     }
 
     public void stopwatchControl(MouseEvent event) {
-        if (timerRun) {
-            controlBtn.setText("Start");
-            var stopPoint = stopwatch.stop();
-            timePointMachine.addPoint(stopPoint);
-        } else {
-            controlBtn.setText("Stop");
-            stopwatch.start();
-        }
+        if (timerRun)
+            stopStopwatch();
+        else
+            startStopwatch();
         timerRun = !timerRun;
     }
 
+    private void startStopwatch() {
+        controlBtn.setText("Stop");
+        stopwatch.start();
+    }
+
+    private void stopStopwatch() {
+        controlBtn.setText("Start");
+        var stopPoint = stopwatch.stop();
+        Duration lapDuration = stopPoint.subtract(lastLap);
+        lastLap = stopPoint;
+
+        timePointRepository.addPoint(stopPoint);
+        lapsRepository.addLap(lapDuration);
+    }
+
     public void reset(MouseEvent event) {
-        timePointMachine.resetToday();
+        lastLap = Duration.ZERO;
+        timePointRepository.resetToday();
+        lapsRepository.resetToday();
         stopwatch.reset();
         timerLabel.setText(toFormatView(Duration.ZERO));
     }

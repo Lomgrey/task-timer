@@ -9,31 +9,34 @@
 <?import javafx.scene.control.TextArea?>
 
 <?import javafx.scene.layout.AnchorPane?>
+<?import javafx.geometry.Insets?>
 <AnchorPane fx:id="anchorPane" xmlns:fx="http://javafx.com/fxml"
-            fx:controller="com.tasktimer.controller.MainController">
+            fx:controller="com.tasktimer.controller.MainController" style="-fx-font-family: 'monospaced';">
     <HBox fx:id="hbox" spacing="10" alignment="CENTER">
         <VBox spacing="20" alignment="CENTER">
-            <Label fx:id="timerLabel" text="0:00:00">
-                <font>
-                    <Font size="40"/>
-                </font>
+            <padding>
+                <Insets top="10" bottom="10" left="5"/>
+            </padding>
+            <Label fx:id="timerLabel" text="0:00:00.0" style="-fx-font-size: 40px;">
             </Label>
             <Button fx:id="controlBtn"
-                    prefWidth="250" prefHeight="50"
-                    onMouseClicked="#stopwatchControl">
+                    prefWidth="450" prefHeight="50"
+                    onMouseClicked="#stopwatchControl" style="-fx-font-size: 16">
                 Start
             </Button>
             <Button fx:id="resetBtn"
-                    prefWidth="250" prefHeight="10"
+                    prefWidth="450" prefHeight="10"
                     onMouseClicked="#reset">
                 Reset
             </Button>
         </VBox>
-        <VBox spacing="20" alignment="CENTER">
-            <TextArea fx:id="timePointArea" editable="false" prefWidth="200" maxWidth="Infinity">
-                <font>
-                    <Font size="18"/>
-                </font>
+        <VBox spacing="10" alignment="CENTER">
+            <padding>
+                <Insets top="10" right="10" bottom="10"/>
+            </padding>
+            <Label fx:id="currentLapLabel" text="0:00:00.0" style="-fx-font-size:18px">
+            </Label>
+            <TextArea fx:id="lapsTextArea" editable="false" prefWidth="400" maxWidth="Infinity" style="-fx-font-size:16px">
             </TextArea>
         </VBox>
     </HBox>

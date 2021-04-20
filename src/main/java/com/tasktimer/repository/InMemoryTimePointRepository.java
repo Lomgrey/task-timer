@@ -1,16 +1,14 @@
 package com.tasktimer.repository;
 
-import javafx.beans.value.ChangeListener;
 import javafx.util.Duration;
 
 import java.time.LocalDate;
-import java.time.LocalDateTime;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.SortedSet;
 import java.util.TreeSet;
 
-public class InMemoryTimePointMachine implements TimePointMachine<Duration> {
+public class InMemoryTimePointRepository implements TimePointRepository<Duration> {
     private final List<CollectionAddValueListener<Duration>> listeners = new ArrayList<>();
 
     private final SortedSet<Duration> timePointsRepo = new TreeSet<>();
