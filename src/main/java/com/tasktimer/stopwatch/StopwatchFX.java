@@ -22,7 +22,7 @@ public class StopwatchFX implements Stopwatch {
 
     private Timeline setupTimeline() {
         Timeline tl = new Timeline(new KeyFrame(
-                Duration.millis(100),
+                Duration.millis(33),
                 event -> {
                     Duration duration = ((KeyFrame) event.getSource()).getTime();
                     time = time.add(duration);
@@ -60,7 +60,7 @@ public class StopwatchFX implements Stopwatch {
 
     @Override
     public void bindTime(Consumer<Duration> bindConsumer) {
-        stopwatchLabel.textProperty().addListener((observable, oldValue, newValue) -> {
+        stopwatchLabel.textProperty().addListener((obs, oldVal, newVal) -> {
             bindConsumer.accept(time);
         });
     }

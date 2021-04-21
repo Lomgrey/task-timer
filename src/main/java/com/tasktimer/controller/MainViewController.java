@@ -19,7 +19,7 @@ import java.util.List;
 import static com.tasktimer.util.DurationFX.toFormatView;
 import static java.lang.String.format;
 
-public class MainController {
+public class MainViewController {
 
     public Label timerLabel;
     public Button controlBtn;
@@ -52,7 +52,6 @@ public class MainController {
 
     private void registryTimePointsAreaUpdate() {
         lapsRepository.addListener((fullList, newVal) -> {
-//            lapsTextArea.appendText(format("Lap %d:\t%s\n", fullList.size(), toFormatView(newVal)));
             var formattedPoints = EntryStream.of(List.copyOf(fullList))
                     .mapKeyValue((i, d) -> format("Lap %d:\t%s", i+1, toFormatView(d)))
                     .toList();

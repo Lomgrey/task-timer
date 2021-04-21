@@ -6,7 +6,7 @@ import java.time.LocalTime;
 import java.time.format.DateTimeFormatter;
 
 public class DurationFX extends Duration {
-    static DateTimeFormatter formatter = DateTimeFormatter.ofPattern("H:mm:ss.S");
+    static DateTimeFormatter formatter = DateTimeFormatter.ofPattern("H:mm:ss.SS");
 
     public DurationFX(double millis) {
         super(millis);
