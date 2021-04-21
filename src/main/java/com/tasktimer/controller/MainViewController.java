@@ -5,9 +5,9 @@ import com.tasktimer.repository.InMemoryTimePointRepository;
 import com.tasktimer.repository.LapsRepository;
 import com.tasktimer.repository.TimePointRepository;
 import com.tasktimer.stopwatch.StopwatchFX;
-import javafx.scene.control.Button;
-import javafx.scene.control.Label;
-import javafx.scene.control.TextArea;
+import javafx.scene.control.*;
+import javafx.scene.input.KeyCode;
+import javafx.scene.input.KeyEvent;
 import javafx.scene.input.MouseEvent;
 import javafx.scene.layout.AnchorPane;
 import javafx.scene.layout.HBox;
@@ -90,11 +90,30 @@ public class MainViewController {
         lapsRepository.addLap(lapDuration);
     }
 
-    public void reset(MouseEvent event) {
+    public void resetConfirmation() {
+        String contentText = "Are you sure that you want to reset? All data fot today will be lost";
+        ButtonType resetBtn = new ButtonType("Reset", ButtonBar.ButtonData.OK_DONE);
+        ButtonType cancelBtn = new ButtonType("Cancel", ButtonBar.ButtonData.OK_DONE);
+
+        Alert alert = new Alert(Alert.AlertType.CONFIRMATION, contentText, cancelBtn, resetBtn);
+        alert.setTitle("Reset");
+        alert.setHeaderText("");
+        alert.showAndWait()
+                .filter(answer -> answer.equals(resetBtn))
+                .ifPresent(ignoreValue -> reset());
+    }
+
+    private void reset() {
         lastLap = Duration.ZERO;
         timePointRepository.resetToday();
         lapsRepository.resetToday();
         stopwatch.reset();
         timerLabel.setText(toFormatView(Duration.ZERO));
+    }
+
+    public void handleKeyInput(KeyEvent keyEvent) {
+        if (keyEvent.isControlDown() && keyEvent.getCode() == KeyCode.R) {
+            resetConfirmation();
+        }
     }
 }

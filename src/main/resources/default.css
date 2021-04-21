@@ -1,3 +1,7 @@
+.background {
+    -fx-background-color: #2f3b4d;
+}
+
 .root{
     -fx-font-family: "monospaced";
 }
