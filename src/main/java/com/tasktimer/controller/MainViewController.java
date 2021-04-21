@@ -23,7 +23,6 @@ public class MainViewController {
 
     public Label timerLabel;
     public Button controlBtn;
-    public Button resetBtn;
     public TextArea lapsTextArea;
 
     public AnchorPane anchorPane;
