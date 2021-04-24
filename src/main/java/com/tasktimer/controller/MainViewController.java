@@ -90,7 +90,7 @@ public class MainViewController {
     }
 
     public void resetConfirmation() {
-        String contentText = "Are you sure that you want to reset? All data fot today will be lost";
+        String contentText = "Are you sure that you want to reset? All the data for today will be lost";
         ButtonType resetBtn = new ButtonType("Reset", ButtonBar.ButtonData.OK_DONE);
         ButtonType cancelBtn = new ButtonType("Cancel", ButtonBar.ButtonData.OK_DONE);
 

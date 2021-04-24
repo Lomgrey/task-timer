@@ -2,6 +2,7 @@ plugins {
     id 'java'
     id 'application'
     id 'org.openjfx.javafxplugin' version '0.0.9'
+    id "edu.sc.seis.macAppBundle" version "2.1.0"
 }
 
 javafx {
@@ -9,8 +10,10 @@ javafx {
     modules = [ 'javafx.base', 'javafx.swing', 'javafx.graphics', 'javafx.controls', 'javafx.fxml', 'javafx.media', 'javafx.web' ]
 }
 
-group 'org.example'
-version '1.0-SNAPSHOT'
+group 'com.tasktimer'
+version '0.0.1-SNAPSHOT'
+sourceCompatibility = 11
+targetCompatibility = 11
 
 repositories {
     mavenCentral()
@@ -27,4 +30,22 @@ test {
     useJUnitPlatform()
 }
 
-mainClassName = 'com.tasktimer.TaskTimerApp'
+task fatJar(type: Jar) {
+    mainClassName='com.tasktimer.Javafx11Main'
+    manifest {
+        attributes 'Main-Class': 'com.tasktimer.Javafx11Main'
+    }
+    archivesBaseName = "task-timer"
+    from {
+        configurations.runtimeClasspath.collect { it.isDirectory() ? it : zipTree(it) }
+    }
+    with jar
+}
+
+macAppBundle {
+    mainClassName = "com.tasktimer.Javafx11Main"
+//    icon = "myIcon.icns"
+    bundleJRE = true
+    javaProperties.put("apple.laf.useScreenMenuBar", "true")
+//    backgroundImage = "doc/macbackground.png"
+}

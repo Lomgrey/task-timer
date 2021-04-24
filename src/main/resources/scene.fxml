@@ -16,7 +16,7 @@
             fx:controller="com.tasktimer.controller.MainViewController">
     <MenuBar useSystemMenuBar="true" onKeyPressed="#handleKeyInput">
         <Menu text="Control">
-            <MenuItem text="reset" onAction="#resetConfirmation"/>
+            <MenuItem text="Reset" onAction="#resetConfirmation"/>
         </Menu>
     </MenuBar>
     <HBox fx:id="hbox" spacing="10" alignment="CENTER">
