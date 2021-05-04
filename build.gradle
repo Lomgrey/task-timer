@@ -7,11 +7,11 @@ plugins {
 
 javafx {
     version = "14.0.2"
-    modules = [ 'javafx.base', 'javafx.swing', 'javafx.graphics', 'javafx.controls', 'javafx.fxml', 'javafx.media', 'javafx.web' ]
+    modules = [ 'javafx.base', 'javafx.swing', 'javafx.graphics', 'javafx.controls', 'javafx.fxml' ]
 }
 
 group 'com.tasktimer'
-version '0.0.1-SNAPSHOT'
+version '0.0.2'
 sourceCompatibility = 11
 targetCompatibility = 11
 
@@ -44,7 +44,7 @@ task fatJar(type: Jar) {
 
 macAppBundle {
     mainClassName = "com.tasktimer.Javafx11Main"
-//    icon = "myIcon.icns"
+    icon = "src/main/resources/app-icon.png"
     bundleJRE = true
     javaProperties.put("apple.laf.useScreenMenuBar", "true")
 //    backgroundImage = "doc/macbackground.png"
