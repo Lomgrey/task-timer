@@ -5,10 +5,10 @@ import com.tasktimer.repository.InMemoryTimePointRepository;
 import com.tasktimer.repository.LapsRepository;
 import com.tasktimer.repository.TimePointRepository;
 import com.tasktimer.stopwatch.StopwatchFX;
+import javafx.event.Event;
 import javafx.scene.control.*;
 import javafx.scene.input.KeyCode;
 import javafx.scene.input.KeyEvent;
-import javafx.scene.input.MouseEvent;
 import javafx.scene.layout.AnchorPane;
 import javafx.scene.layout.HBox;
 import javafx.util.Duration;
@@ -18,6 +18,8 @@ import java.util.List;
 
 import static com.tasktimer.util.DurationFX.toFormatView;
 import static java.lang.String.format;
+import static javafx.scene.input.KeyCode.ENTER;
+import static javafx.scene.input.KeyCode.SPACE;
 
 public class MainViewController {
 
@@ -66,12 +68,19 @@ public class MainViewController {
                 hbox.setPrefHeight(newVal.doubleValue()));
     }
 
-    public void stopwatchControl(MouseEvent event) {
+    public void stopwatchControl(Event event) {
         if (timerRun)
             stopStopwatch();
         else
             startStopwatch();
         timerRun = !timerRun;
+    }
+
+    public void stopwatchControlKeyEvent(KeyEvent event) {
+        var key = event.getCode();
+        if (key == SPACE || key == ENTER) {
+            stopwatchControl(event);
+        }
     }
 
     private void startStopwatch() {
