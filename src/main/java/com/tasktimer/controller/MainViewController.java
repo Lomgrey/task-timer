@@ -6,11 +6,13 @@ import com.tasktimer.repository.LapsRepository;
 import com.tasktimer.repository.TimePointRepository;
 import com.tasktimer.stopwatch.StopwatchFX;
 import javafx.event.Event;
+import javafx.scene.Scene;
 import javafx.scene.control.*;
 import javafx.scene.input.KeyCode;
 import javafx.scene.input.KeyEvent;
 import javafx.scene.layout.AnchorPane;
 import javafx.scene.layout.HBox;
+import javafx.stage.Stage;
 import javafx.util.Duration;
 import one.util.streamex.EntryStream;
 
@@ -22,6 +24,7 @@ import static javafx.scene.input.KeyCode.ENTER;
 import static javafx.scene.input.KeyCode.SPACE;
 
 public class MainViewController {
+    private Stage stage;
 
     public Label timerLabel;
     public Button controlBtn;
@@ -51,6 +54,11 @@ public class MainViewController {
         });
     }
 
+    public void setStage(Stage stage) {
+        this.stage = stage;
+        registryShortcuts();
+    }
+
     private void registryTimePointsAreaUpdate() {
         lapsRepository.addListener((fullList, newVal) -> {
             var formattedPoints = EntryStream.of(List.copyOf(fullList))
@@ -68,7 +76,22 @@ public class MainViewController {
                 hbox.setPrefHeight(newVal.doubleValue()));
     }
 
+    private void registryShortcuts() {
+        Scene scene = stage.getScene();
+        scene.addEventFilter(KeyEvent.KEY_PRESSED, ke -> {
+            if (Shortcuts.START_STOP.match(ke)) {
+                switchStopwatch();
+            } else if (Shortcuts.RESET.match(ke)) {
+                resetConfirmation();
+            }
+        });
+    }
+
     public void stopwatchControl(Event event) {
+        switchStopwatch();
+    }
+
+    private void switchStopwatch() {
         if (timerRun)
             stopStopwatch();
         else

@@ -1,5 +1,6 @@
 package com.tasktimer;
 
+import com.tasktimer.controller.MainViewController;
 import javafx.application.Application;
 import javafx.fxml.FXMLLoader;
 import javafx.scene.Parent;
@@ -21,12 +22,17 @@ public class TaskTimerApp extends Application {
     @Override
     public void start(Stage stage) throws IOException {
         URL resource = getClass().getClassLoader().getResource(ROOT_FXML);
-        Parent root = FXMLLoader.load(Objects.requireNonNull(resource));
+        FXMLLoader loader = new FXMLLoader(resource);
+        Parent root = loader.load();
 
         stage.setTitle(APP_NAME);
         Scene scene = new Scene(root, INIT_ROOT_WIDTH, INIT_ROOT_HEIGHT);
         scene.getStylesheets().add(getClass().getClassLoader().getResource("default.css").toExternalForm());
         stage.setScene(scene);
+
+        MainViewController controller = loader.getController();
+        controller.setStage(stage);
+
         stage.show();
     }
 }

@@ -34,15 +34,22 @@
                 <Button fx:id="controlBtn"
                         prefWidth="450" prefHeight="50"
                         onMouseClicked="#stopwatchControl"
-                        onKeyPressed="#stopwatchControlKeyEvent" style="-fx-font-size: 16">
+                        onKeyPressed="#stopwatchControlKeyEvent"
+                        style="-fx-font-size: 16"
+                        focusTraversable="false">
                     Start
                 </Button>
             </VBox>
             <VBox spacing="10" alignment="CENTER">
                 <padding>
-                    <Insets top="10" right="10" bottom="10"/>
+                    <Insets right="10"/>
                 </padding>
-                <TextArea fx:id="lapsTextArea" editable="false" prefWidth="420" maxWidth="Infinity" style="-fx-font-size:16px">
+                <TextArea fx:id="lapsTextArea"
+                          editable="false"
+                          prefWidth="420"
+                          maxWidth="Infinity"
+                          focusTraversable="false"
+                          style="-fx-font-size:16px">
                 </TextArea>
             </VBox>
         </HBox>
