@@ -1,12 +1,13 @@
-package com.tasktimer.repository;
+package com.tasktimer.repository.local;
 
+import com.tasktimer.repository.CycleRepository;
 import javafx.util.Duration;
 
 import java.time.LocalDate;
 import java.util.ArrayList;
 import java.util.List;
 
-public class InMemoryLapsRepository<T> implements LapsRepository<Duration> {
+public class InMemoryCycleRepository<T> implements CycleRepository<Duration> {
     private final List<CollectionAddValueListener<Duration>> listeners = new ArrayList<>();
     private final List<Duration> laps = new ArrayList<>();
 

@@ -3,7 +3,7 @@ package com.tasktimer.repository;
 import java.time.LocalDate;
 import java.util.List;
 
-public interface LapsRepository<T> extends ObservableCollection<T> {
+public interface CycleRepository<T> extends ObservableCollection<T> {
 
     void addLap(T lapTime);
 

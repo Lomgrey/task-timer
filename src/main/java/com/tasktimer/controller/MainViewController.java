@@ -1,9 +1,9 @@
 package com.tasktimer.controller;
 
-import com.tasktimer.repository.InMemoryLapsRepository;
-import com.tasktimer.repository.InMemoryTimePointRepository;
-import com.tasktimer.repository.LapsRepository;
+import com.tasktimer.repository.CycleRepository;
+import com.tasktimer.repository.CycleRepositoryFactory;
 import com.tasktimer.repository.TimePointRepository;
+import com.tasktimer.repository.TimeRepositoryFactory;
 import com.tasktimer.stopwatch.StopwatchFX;
 import javafx.event.Event;
 import javafx.scene.Scene;
@@ -39,12 +39,12 @@ public class MainViewController {
 
     private StopwatchFX stopwatch;
     private TimePointRepository<Duration> timePointRepository;
-    private LapsRepository<Duration> lapsRepository;
+    private CycleRepository<Duration> cycleRepository;
 
     public void initialize() {
         stopwatch = new StopwatchFX(timerLabel);
-        timePointRepository = new InMemoryTimePointRepository();
-        lapsRepository = new InMemoryLapsRepository<>();
+        timePointRepository = TimeRepositoryFactory.getInstance();
+        cycleRepository = CycleRepositoryFactory.getInstance();
 
         registryTimePointsAreaUpdate();
         registryResize();
@@ -60,7 +60,7 @@ public class MainViewController {
     }
 
     private void registryTimePointsAreaUpdate() {
-        lapsRepository.addListener((fullList, newVal) -> {
+        cycleRepository.addListener((fullList, newVal) -> {
             var formattedPoints = EntryStream.of(List.copyOf(fullList))
                     .mapKeyValue((i, d) -> format("Lap %d:\t%s", i+1, toFormatView(d)))
                     .toList();
@@ -118,7 +118,7 @@ public class MainViewController {
         lastLap = stopPoint;
 
         timePointRepository.addPoint(stopPoint);
-        lapsRepository.addLap(lapDuration);
+        cycleRepository.addLap(lapDuration);
     }
 
     public void resetConfirmation() {
@@ -137,7 +137,7 @@ public class MainViewController {
     private void reset() {
         lastLap = Duration.ZERO;
         timePointRepository.resetToday();
-        lapsRepository.resetToday();
+        cycleRepository.resetToday();
         stopwatch.reset();
         timerLabel.setText(toFormatView(Duration.ZERO));
     }

@@ -1,5 +1,6 @@
-package com.tasktimer.repository;
+package com.tasktimer.repository.local;
 
+import com.tasktimer.repository.TimePointRepository;
 import javafx.util.Duration;
 
 import java.time.LocalDate;
