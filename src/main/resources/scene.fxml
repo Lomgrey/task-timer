@@ -42,11 +42,12 @@
             </VBox>
             <VBox spacing="10" alignment="CENTER">
                 <padding>
-                    <Insets right="10"/>
+                    <Insets right="10" bottom="10" top="10"/>
                 </padding>
                 <TextArea fx:id="lapsTextArea"
                           editable="false"
                           prefWidth="420"
+                          prefHeight="400"
                           maxWidth="Infinity"
                           focusTraversable="false"
                           style="-fx-font-size:16px">
