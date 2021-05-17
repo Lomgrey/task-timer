@@ -3,6 +3,7 @@ package com.tasktimer.repository.local;
 import com.tasktimer.repository.CycleRepository;
 import javafx.util.Duration;
 
+import java.io.File;
 import java.time.LocalDate;
 import java.util.ArrayList;
 import java.util.List;
@@ -36,6 +37,11 @@ public class InMemoryCycleRepository<T> implements CycleRepository<Duration> {
     public void resetToday() {
         laps.clear();
         notifyListeners();
+    }
+
+    @Override
+    public boolean save(File file) {
+        return true;
     }
 
     /** Listener */

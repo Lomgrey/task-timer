@@ -1,15 +1,21 @@
 package com.tasktimer.repository;
 
-import com.tasktimer.repository.local.InMemoryCycleRepository;
+import com.tasktimer.repository.local.LocalFileCycleRepository;
+import com.tasktimer.repository.local.files.OSDependLocalFile;
 import javafx.util.Duration;
+
+import java.io.File;
 
 public class CycleRepositoryFactory {
 
-    private static final CycleRepository<Duration> CYCLE_REPOSITORY =
-            new InMemoryCycleRepository<>();
+    private static CycleRepository<Duration> cycleRepository;
 
-    public static CycleRepository<Duration> getInstance() {
-        return CYCLE_REPOSITORY;
+    public synchronized static CycleRepository<Duration> getInstance() {
+        if (cycleRepository == null) {
+            File localFile = OSDependLocalFile.get();
+            cycleRepository = new LocalFileCycleRepository(localFile);
+        }
+        return cycleRepository;
     }
 
 }
