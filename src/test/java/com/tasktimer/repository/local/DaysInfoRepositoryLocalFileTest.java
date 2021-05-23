@@ -1,5 +1,7 @@
 package com.tasktimer.repository.local;
 
+import com.tasktimer.repository.DaysInfoRepositoryLocalFile;
+import com.tasktimer.repository.mapper.ObjectMapperFactory;
 import org.junit.jupiter.api.BeforeAll;
 import org.junit.jupiter.api.Test;
 
@@ -7,32 +9,34 @@ import java.io.File;
 import java.io.IOException;
 import java.nio.file.Files;
 
-import static org.junit.jupiter.api.Assertions.*;
+import static com.tasktimer.repository.mapper.ObjectMapperFactory.MAPPER;
+import static org.junit.jupiter.api.Assertions.assertTrue;
 
-class LocalFileCycleRepositoryTest {
+class DaysInfoRepositoryLocalFileTest {
     static final String baseResourcePath = "src/test/resources/";
     static final File daysFile = new File(baseResourcePath + "days.json");
 
-    static LocalFileCycleRepository repository;
+    static DaysInfoRepositoryLocalFile repository;
 
     @BeforeAll
     static void beforeAll() {
-        repository = new LocalFileCycleRepository(daysFile);
+        repository = new DaysInfoRepositoryLocalFile(daysFile, ObjectMapperFactory.MAPPER);
     }
 
-    /* LOADING test */
+    /**
+     * LOADING test
+     */
+
     @Test
     void testLoadingAndParseFile_fileExist() {
-        File daysFile = new File(baseResourcePath + "days.json");
-        new LocalFileCycleRepository(daysFile);
+        new DaysInfoRepositoryLocalFile(daysFile, MAPPER);
     }
 
     @Test
     void testLoadingAndParseFile_fileIsEmpty() throws IOException {
         var emptyFile = Files.createTempFile("tt", "").toFile();
-        assert emptyFile.createNewFile();
 
-        new LocalFileCycleRepository(emptyFile);
+        new DaysInfoRepositoryLocalFile(emptyFile, MAPPER);
 
         assertTrue(emptyFile.exists());
         assertTrue(emptyFile.length() > 0);
@@ -41,10 +45,12 @@ class LocalFileCycleRepositoryTest {
     @Test
     void testLoadingAndParseFile_fileWithDefaultValues() {
         File daysFile = new File(baseResourcePath + "with_default_values.json");
-        new LocalFileCycleRepository(daysFile);
+        new DaysInfoRepositoryLocalFile(daysFile, MAPPER);
     }
 
-    /* Functionality tests */
+    /**
+     * Functionality tests
+     */
 
 
 }

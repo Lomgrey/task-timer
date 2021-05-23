@@ -1,6 +1,5 @@
 package com.tasktimer.repository;
 
-import java.io.File;
 import java.time.LocalDate;
 import java.util.List;
 
@@ -15,7 +14,5 @@ public interface CycleRepository<T> extends ObservableCollection<T> {
     List<T> getForToday();
 
     void resetToday();
-
-    boolean save(File file);
 
 }

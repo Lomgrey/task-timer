@@ -23,7 +23,7 @@ public class DayInfo {
     private List<Duration> cycles;
     private Duration dayDuration;
 
-    public static DayInfo withDefaultFields() {
+    public static DayInfo defaultInstance() {
         return DayInfo.builder()
                 .date(LocalDate.now())
                 .cycles(new ArrayList<>())

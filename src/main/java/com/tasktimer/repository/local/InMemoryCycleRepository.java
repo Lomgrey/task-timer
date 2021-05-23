@@ -39,11 +39,6 @@ public class InMemoryCycleRepository<T> implements CycleRepository<Duration> {
         notifyListeners();
     }
 
-    @Override
-    public boolean save(File file) {
-        return true;
-    }
-
     /** Listener */
 
     @Override
