@@ -40,7 +40,7 @@ public class MainViewController {
     public Label currentLapLabel;
 
     private boolean timerRun = false;
-    private Duration lastLap;
+    private Duration lastLapPoint;
 
     private StopwatchFX stopwatch;
 
@@ -64,7 +64,7 @@ public class MainViewController {
     private void loadTodayInfoAndUpdateView() {
         var todayInfo = daysInfoRepository.getTodayInfo();
         stopwatch.setTime(todayInfo.getDayDuration());
-        lastLap = getLast(todayInfo.getCycles(), Duration.ZERO);
+        lastLapPoint = todayInfo.getDayDuration();
         updateView(todayInfo);
     }
 
@@ -113,7 +113,7 @@ public class MainViewController {
 
     private void registryCurrentLapUpdate() {
         stopwatch.bindTime(currentDuration -> {
-            currentLapLabel.setText(toFormatView(currentDuration.subtract(lastLap)));
+            currentLapLabel.setText(toFormatView(currentDuration.subtract(lastLapPoint)));
         });
     }
 
@@ -144,8 +144,8 @@ public class MainViewController {
     private void stopStopwatch() {
         controlBtn.setText("Start");
         var stopPoint = stopwatch.stop();
-        Duration lapDuration = stopPoint.subtract(lastLap);
-        lastLap = stopPoint;
+        Duration lapDuration = stopPoint.subtract(lastLapPoint);
+        lastLapPoint = stopPoint;
 
         timePointRepository.addPoint(stopPoint);
         cycleRepository.addLap(lapDuration);
@@ -165,7 +165,7 @@ public class MainViewController {
     }
 
     private void reset() {
-        lastLap = Duration.ZERO;
+        lastLapPoint = Duration.ZERO;
         timePointRepository.resetToday();
         cycleRepository.resetToday();
         stopwatch.reset();
