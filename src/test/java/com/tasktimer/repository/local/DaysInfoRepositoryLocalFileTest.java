@@ -1,6 +1,5 @@
 package com.tasktimer.repository.local;
 
-import com.tasktimer.repository.DaysInfoRepositoryLocalFile;
 import com.tasktimer.repository.mapper.ObjectMapperFactory;
 import org.junit.jupiter.api.BeforeAll;
 import org.junit.jupiter.api.Test;

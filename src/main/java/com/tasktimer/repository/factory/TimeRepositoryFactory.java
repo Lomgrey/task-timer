@@ -1,5 +1,6 @@
-package com.tasktimer.repository;
+package com.tasktimer.repository.factory;
 
+import com.tasktimer.repository.TimePointRepository;
 import com.tasktimer.repository.local.InMemoryTimePointRepository;
 import javafx.util.Duration;
 

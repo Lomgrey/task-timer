@@ -10,7 +10,7 @@ public interface DaysInfoRepository {
 
     DayInfo getDayInfo(LocalDate forDate);
 
-    void writeToday(DayInfo dayInfo);
+    void write(DayInfo dayInfo);
 
-    void write(DayInfo dayInfo, LocalDate date);
+    void write(LocalDate date, DayInfo dayInfo);
 }

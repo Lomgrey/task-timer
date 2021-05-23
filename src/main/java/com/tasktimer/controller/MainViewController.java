@@ -1,10 +1,14 @@
 package com.tasktimer.controller;
 
 import com.tasktimer.repository.CycleRepository;
-import com.tasktimer.repository.CycleRepositoryFactory;
+import com.tasktimer.repository.DaysInfoRepository;
 import com.tasktimer.repository.TimePointRepository;
-import com.tasktimer.repository.TimeRepositoryFactory;
+import com.tasktimer.repository.factory.CycleRepositoryFactory;
+import com.tasktimer.repository.factory.DaysInfoRepositoryFactory;
+import com.tasktimer.repository.factory.TimeRepositoryFactory;
+import com.tasktimer.repository.local.DayInfo;
 import com.tasktimer.stopwatch.StopwatchFX;
+import com.tasktimer.util.DurationFX;
 import javafx.event.Event;
 import javafx.scene.Scene;
 import javafx.scene.control.*;
@@ -18,6 +22,7 @@ import one.util.streamex.EntryStream;
 
 import java.util.List;
 
+import static com.google.common.collect.Iterables.getLast;
 import static com.tasktimer.util.DurationFX.toFormatView;
 import static java.lang.String.format;
 import static javafx.scene.input.KeyCode.ENTER;
@@ -35,23 +40,37 @@ public class MainViewController {
     public Label currentLapLabel;
 
     private boolean timerRun = false;
-    private Duration lastLap = Duration.ZERO;
+    private Duration lastLap;
 
     private StopwatchFX stopwatch;
+
     private TimePointRepository<Duration> timePointRepository;
     private CycleRepository<Duration> cycleRepository;
+    private DaysInfoRepository daysInfoRepository;
 
     public void initialize() {
         stopwatch = new StopwatchFX(timerLabel);
         timePointRepository = TimeRepositoryFactory.getInstance();
         cycleRepository = CycleRepositoryFactory.getInstance();
+        daysInfoRepository = DaysInfoRepositoryFactory.getInstance();
+
+        loadTodayInfoAndUpdateView();
 
         registryTimePointsAreaUpdate();
         registryResize();
+        registryCurrentLapUpdate();
+    }
 
-        stopwatch.bindTime(currentDuration -> {
-            currentLapLabel.setText(toFormatView(currentDuration.subtract(lastLap)));
-        });
+    private void loadTodayInfoAndUpdateView() {
+        var todayInfo = daysInfoRepository.getTodayInfo();
+        stopwatch.setTime(todayInfo.getDayDuration());
+        lastLap = getLast(todayInfo.getCycles(), Duration.ZERO);
+        updateView(todayInfo);
+    }
+
+    private void updateView(DayInfo dayInfo) {
+        updateCyclesView(dayInfo.getCycles());
+        timerLabel.setText(DurationFX.toFormatView(dayInfo.getDayDuration()));
     }
 
     public void setStage(Stage stage) {
@@ -61,12 +80,17 @@ public class MainViewController {
 
     private void registryTimePointsAreaUpdate() {
         cycleRepository.addListener((fullList, newVal) -> {
-            var formattedPoints = EntryStream.of(List.copyOf(fullList))
-                    .mapKeyValue((i, d) -> format("Lap %d:\t%s", i+1, toFormatView(d)))
-                    .toList();
-            lapsTextArea.setText(String.join("\n", formattedPoints) + "\n"); // todo: fix it for scroll down
-            lapsTextArea.setScrollTop(Double.MAX_VALUE);
+            updateCyclesView(fullList);
         });
+    }
+
+    private void updateCyclesView(java.util.Collection<? extends Duration> fullList) {
+        if (fullList.isEmpty()) return;
+        var formattedPoints = EntryStream.of(List.copyOf(fullList))
+                .mapKeyValue((i, d) -> format("Lap %d:\t%s", i+1, toFormatView(d)))
+                .toList();
+        lapsTextArea.setText(String.join("\n", formattedPoints) + "\n"); // todo: fix it for scroll down
+        lapsTextArea.setScrollTop(Double.MAX_VALUE);
     }
 
     private void registryResize() {
@@ -84,6 +108,12 @@ public class MainViewController {
             } else if (Shortcuts.RESET.match(ke)) {
                 resetConfirmation();
             }
+        });
+    }
+
+    private void registryCurrentLapUpdate() {
+        stopwatch.bindTime(currentDuration -> {
+            currentLapLabel.setText(toFormatView(currentDuration.subtract(lastLap)));
         });
     }
 

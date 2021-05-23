@@ -1,17 +1,13 @@
 package com.tasktimer.repository.local;
 
-import com.fasterxml.jackson.databind.ObjectMapper;
-import com.fasterxml.jackson.databind.type.CollectionType;
 import com.tasktimer.repository.CycleRepository;
 import com.tasktimer.repository.DaysInfoRepository;
 import com.tasktimer.util.TimeAction;
 import javafx.util.Duration;
-import lombok.SneakyThrows;
 
-import java.io.File;
-import java.io.IOException;
 import java.time.LocalDate;
-import java.util.*;
+import java.util.ArrayList;
+import java.util.List;
 
 import static com.tasktimer.util.TimeAction.MINUS;
 import static com.tasktimer.util.TimeAction.PLUS;
@@ -38,12 +34,14 @@ public class LocalFileCycleRepository implements CycleRepository<Duration> {
         todayInfo.getCycles().add(lap);
         updateDayDuration(PLUS, lap);
         notifyListeners(lap);
+        daysInfoRepository.write(todayInfo);
     }
 
     @Override
     public void removeLap(Duration lap) {
         todayInfo.getCycles().remove(lap);
         updateDayDuration(MINUS, lap);
+        daysInfoRepository.write(todayInfo);
     }
 
     @Override

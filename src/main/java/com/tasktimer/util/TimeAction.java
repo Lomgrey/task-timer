@@ -15,6 +15,6 @@ public enum TimeAction {
     }
 
     public Duration apply(Duration time1, Duration time2) {
-        return function.apply(time1, time1);
+        return function.apply(time1, time2);
     }
 }

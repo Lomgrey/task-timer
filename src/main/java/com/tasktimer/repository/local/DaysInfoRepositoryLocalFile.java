@@ -1,8 +1,8 @@
-package com.tasktimer.repository;
+package com.tasktimer.repository.local;
 
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.fasterxml.jackson.databind.type.CollectionType;
-import com.tasktimer.repository.local.DayInfo;
+import com.tasktimer.repository.DaysInfoRepository;
 import lombok.SneakyThrows;
 
 import java.io.File;
@@ -30,7 +30,7 @@ public class DaysInfoRepositoryLocalFile implements DaysInfoRepository {
         if (fileIsEmpty) {
             days = new HashMap<>();
             DayInfo today = DayInfo.defaultInstance();
-            writeToday(today);
+            write(today);
             save();
         } else {
             days = loadDaysInfo();
@@ -52,7 +52,13 @@ public class DaysInfoRepositoryLocalFile implements DaysInfoRepository {
 
     @Override
     public DayInfo getTodayInfo() {
-        return getDayInfo(LocalDate.now());
+        DayInfo today = getDayInfo(LocalDate.now());
+        if (today == null) {
+            today = DayInfo.defaultInstance();
+            write(today);
+            return today;
+        }
+        return today;
     }
 
     @Override
@@ -61,13 +67,14 @@ public class DaysInfoRepositoryLocalFile implements DaysInfoRepository {
     }
 
     @Override
-    public void writeToday(DayInfo dayInfo) {
-        write(dayInfo, LocalDate.now());
+    public void write(DayInfo dayInfo) {
+        write(LocalDate.now(), dayInfo);
     }
 
     @Override
-    public void write(DayInfo dayInfo, LocalDate date) {
+    public void write(LocalDate date, DayInfo dayInfo) {
         days.put(date, dayInfo);
+        save();
     }
 
     private void save() {

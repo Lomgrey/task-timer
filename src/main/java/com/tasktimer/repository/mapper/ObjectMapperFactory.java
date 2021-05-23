@@ -1,9 +1,5 @@
 package com.tasktimer.repository.mapper;
 
-import com.fasterxml.jackson.core.*;
-import com.fasterxml.jackson.core.json.JsonReadFeature;
-import com.fasterxml.jackson.core.json.JsonWriteFeature;
-import com.fasterxml.jackson.databind.MappingJsonFactory;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.fasterxml.jackson.databind.SerializationFeature;
 import com.fasterxml.jackson.databind.module.SimpleModule;
@@ -21,6 +17,7 @@ public class ObjectMapperFactory {
         MAPPER.registerModule(durationFXDeserializerModule());
 
         MAPPER.disable(SerializationFeature.WRITE_DATES_AS_TIMESTAMPS);
+        MAPPER.enable(SerializationFeature.INDENT_OUTPUT);
     }
 
     static SimpleModule durationFXSerializerModule() {

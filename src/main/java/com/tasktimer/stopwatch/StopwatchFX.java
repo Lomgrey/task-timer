@@ -33,6 +33,10 @@ public class StopwatchFX implements Stopwatch {
         return tl;
     }
 
+    public void setTime(Duration time) {
+        this.time = time;
+    }
+
     @Override
     public Duration start() {
         timeline.play();
