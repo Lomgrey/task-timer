@@ -26,6 +26,9 @@ public class TaskTimerApp extends Application {
         Parent root = loader.load();
 
         stage.setTitle(APP_NAME);
+        stage.setMinHeight(MIN_ROOT_HEIGHT);
+        stage.setMinWidth(MIN_ROOT_WIDTH);
+
         Scene scene = new Scene(root, INIT_ROOT_WIDTH, INIT_ROOT_HEIGHT);
         scene.getStylesheets().add(getClass().getClassLoader().getResource("default.css").toExternalForm());
         stage.setScene(scene);
