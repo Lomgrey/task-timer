@@ -9,18 +9,24 @@ import com.tasktimer.repository.factory.TimeRepositoryFactory;
 import com.tasktimer.repository.local.DayInfo;
 import com.tasktimer.stopwatch.StopwatchFX;
 import com.tasktimer.util.DurationFX;
+import javafx.animation.KeyFrame;
+import javafx.animation.Timeline;
 import javafx.event.Event;
+import javafx.scene.Cursor;
 import javafx.scene.Scene;
 import javafx.scene.control.*;
-import javafx.scene.input.KeyCode;
-import javafx.scene.input.KeyEvent;
+import javafx.scene.input.*;
 import javafx.scene.layout.AnchorPane;
 import javafx.scene.layout.HBox;
+import javafx.scene.paint.Color;
+import javafx.scene.text.Font;
 import javafx.stage.Stage;
 import javafx.util.Duration;
 import one.util.streamex.EntryStream;
 
+import java.util.Collection;
 import java.util.List;
+import java.util.Optional;
 
 import static com.google.common.collect.Iterables.getLast;
 import static com.tasktimer.util.DurationFX.toFormatView;
@@ -84,10 +90,10 @@ public class MainViewController {
         });
     }
 
-    private void updateCyclesView(java.util.Collection<? extends Duration> fullList) {
+    private void updateCyclesView(Collection<? extends Duration> fullList) {
         if (fullList.isEmpty()) return;
         var formattedPoints = EntryStream.of(List.copyOf(fullList))
-                .mapKeyValue((i, d) -> format("Lap %d:\t%s", i+1, toFormatView(d)))
+                .mapKeyValue((i, d) -> format("Lap %d:\t%s", i + 1, toFormatView(d)))
                 .toList();
         lapsTextArea.setText(String.join("\n", formattedPoints) + "\n"); // todo: fix it for scroll down
         lapsTextArea.setScrollTop(Double.MAX_VALUE);
@@ -176,5 +182,96 @@ public class MainViewController {
         if (keyEvent.isControlDown() && keyEvent.getCode() == KeyCode.R) {
             resetConfirmation();
         }
+    }
+
+    /** COPY TO CLIPBOARD */
+
+    public void copyToClipboard(MouseEvent event) {
+        var source = event.getSource();
+        checkAndCast(source)
+                .ifPresent(labelToCopy -> {
+                    copyLabelDataToClipboard(labelToCopy);
+                    showPopUp("Copied ✓", Color.GREEN);
+                });
+    }
+
+    private void showPopUp(String text, Color color) {
+        var popUp = new Label(text);
+        popUp.setFont(Font.font(16));
+        popUp.setTextFill(color);
+
+        var width = stage.getScene().getWidth();
+        popUp.setTranslateX(width - (width - 10));
+        var height = stage.getScene().getHeight();
+        popUp.setTranslateY(height - 30);
+
+        int fat = 2_000; // 5 sec
+        int oneFrameTime = 50;
+        var tl = new Timeline(new KeyFrame(
+                Duration.millis(oneFrameTime),
+                event -> { // todo: add animation (for opacity of position)
+//                    var time = ((KeyFrame) event.getSource()).getTime();
+//                    double opacity = calcOpacity(fat, time.toMillis());
+//                    popUp.setTextFill(Color.color(
+//                            color.getRed(),
+//                            color.getGreen(),
+//                            color.getBlue(),
+//                            opacity));
+                }
+        ));
+        tl.setOnFinished(event -> anchorPane.getChildren().remove(popUp));
+        tl.setCycleCount(fat / oneFrameTime);
+
+        tl.play();
+        anchorPane.getChildren().add(popUp);
+
+    }
+
+    /**
+     *
+     * @param fat - full animation time
+     * @param millis - current state
+     * @return - opacity for that time
+     */
+    private double calcOpacity(double fat, double millis) {
+        var thirdPart = fat / 3;
+        if (millis < thirdPart) {
+            // increase opacity
+            return 0.5;
+        } else if (millis > thirdPart && millis < thirdPart * 2) {
+            // static period
+            return 1;
+        } else {
+            // reduce opacity
+            return 0.5;
+        }
+    }
+
+    private Optional<Label> checkAndCast(Object source) {
+        if (source instanceof Label) {
+            return Optional.of((Label) source);
+        }
+        return Optional.empty();
+    }
+
+    private void copyLabelDataToClipboard(Label labelToCopy) {
+        var clipboard = Clipboard.getSystemClipboard();
+        var content = new ClipboardContent();
+        content.putString(labelToCopy.getText());
+        clipboard.setContent(content);
+    }
+
+    public void changeMouseCursorToHand(MouseEvent event) {
+        var source = event.getSource();
+        checkAndCast(source)
+                .ifPresent(label -> label.setTextFill(Color.gray(0.5)));
+        stage.getScene().setCursor(Cursor.HAND);
+    }
+
+    public void changeMouseCursorToDefault(MouseEvent event) {
+        var source = event.getSource();
+        checkAndCast(source)
+                .ifPresent(label -> label.setTextFill(Color.gray(0)));
+        stage.getScene().setCursor(Cursor.DEFAULT);
     }
 }

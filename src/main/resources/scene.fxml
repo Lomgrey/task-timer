@@ -26,9 +26,17 @@
                     <Insets top="10" bottom="10" left="10"/>
                 </padding>
                 <VBox spacing="1" alignment="CENTER">
-                    <Label fx:id="currentLapLabel" text="0:00:00.00" style="-fx-font-size: 40px;">
+                    <Label fx:id="currentLapLabel" text="0:00:00.00"
+                           onMouseClicked="#copyToClipboard"
+                           onMouseEntered="#changeMouseCursorToHand"
+                           onMouseExited="#changeMouseCursorToDefault"
+                           style="-fx-font-size: 40px;">
                     </Label>
-                    <Label fx:id="timerLabel" text="0:00:00.00" style="-fx-font-size:18px">
+                    <Label fx:id="timerLabel" text="0:00:00.00"
+                           onMouseClicked="#copyToClipboard"
+                           onMouseEntered="#changeMouseCursorToHand"
+                           onMouseExited="#changeMouseCursorToDefault"
+                           style="-fx-font-size:18px">
                     </Label>
                 </VBox>
                 <Button fx:id="controlBtn"
