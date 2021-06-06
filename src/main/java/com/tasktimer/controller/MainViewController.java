@@ -1,5 +1,8 @@
 package com.tasktimer.controller;
 
+import com.tasktimer.animation.PopUp;
+import com.tasktimer.animation.PopUpAnimation;
+import com.tasktimer.animation.PopUpType;
 import com.tasktimer.repository.CycleRepository;
 import com.tasktimer.repository.DaysInfoRepository;
 import com.tasktimer.repository.TimePointRepository;
@@ -9,8 +12,6 @@ import com.tasktimer.repository.factory.TimeRepositoryFactory;
 import com.tasktimer.repository.local.DayInfo;
 import com.tasktimer.stopwatch.StopwatchFX;
 import com.tasktimer.util.DurationFX;
-import javafx.animation.KeyFrame;
-import javafx.animation.Timeline;
 import javafx.event.Event;
 import javafx.scene.Cursor;
 import javafx.scene.Scene;
@@ -19,7 +20,6 @@ import javafx.scene.input.*;
 import javafx.scene.layout.AnchorPane;
 import javafx.scene.layout.HBox;
 import javafx.scene.paint.Color;
-import javafx.scene.text.Font;
 import javafx.stage.Stage;
 import javafx.util.Duration;
 import one.util.streamex.EntryStream;
@@ -28,7 +28,6 @@ import java.util.Collection;
 import java.util.List;
 import java.util.Optional;
 
-import static com.google.common.collect.Iterables.getLast;
 import static com.tasktimer.util.DurationFX.toFormatView;
 import static java.lang.String.format;
 import static javafx.scene.input.KeyCode.ENTER;
@@ -186,65 +185,23 @@ public class MainViewController {
 
     /** COPY TO CLIPBOARD */
 
-    public void copyToClipboard(MouseEvent event) {
+    public void copyToClipboardEvent(MouseEvent event) {
         var source = event.getSource();
         checkAndCast(source)
                 .ifPresent(labelToCopy -> {
                     copyLabelDataToClipboard(labelToCopy);
-                    showPopUp("Copied ✓", Color.GREEN);
+                    var popUp = new PopUp()
+                            .setText("Copied ✓")
+                            .setPopUpType(PopUpType.INFO);
+                    showPopUp(popUp);
                 });
     }
 
-    private void showPopUp(String text, Color color) {
-        var popUp = new Label(text);
-        popUp.setFont(Font.font(16));
-        popUp.setTextFill(color);
-
-        var width = stage.getScene().getWidth();
-        popUp.setTranslateX(width - (width - 10));
-        var height = stage.getScene().getHeight();
-        popUp.setTranslateY(height - 30);
-
-        int fat = 2_000; // 5 sec
-        int oneFrameTime = 50;
-        var tl = new Timeline(new KeyFrame(
-                Duration.millis(oneFrameTime),
-                event -> { // todo: add animation (for opacity of position)
-//                    var time = ((KeyFrame) event.getSource()).getTime();
-//                    double opacity = calcOpacity(fat, time.toMillis());
-//                    popUp.setTextFill(Color.color(
-//                            color.getRed(),
-//                            color.getGreen(),
-//                            color.getBlue(),
-//                            opacity));
-                }
-        ));
-        tl.setOnFinished(event -> anchorPane.getChildren().remove(popUp));
-        tl.setCycleCount(fat / oneFrameTime);
-
-        tl.play();
-        anchorPane.getChildren().add(popUp);
-
-    }
-
-    /**
-     *
-     * @param fat - full animation time
-     * @param millis - current state
-     * @return - opacity for that time
-     */
-    private double calcOpacity(double fat, double millis) {
-        var thirdPart = fat / 3;
-        if (millis < thirdPart) {
-            // increase opacity
-            return 0.5;
-        } else if (millis > thirdPart && millis < thirdPart * 2) {
-            // static period
-            return 1;
-        } else {
-            // reduce opacity
-            return 0.5;
-        }
+    private void showPopUp(PopUp popUp) {
+        new PopUpAnimation()
+                .animate(popUp)
+                .on(anchorPane)
+                .start();
     }
 
     private Optional<Label> checkAndCast(Object source) {
