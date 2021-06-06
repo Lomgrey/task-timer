@@ -15,11 +15,11 @@
 <AnchorPane fx:id="anchorPane" xmlns:fx="http://javafx.com/fxml"
             fx:controller="com.tasktimer.controller.MainViewController">
     <VBox>
-        <MenuBar useSystemMenuBar="true" onKeyPressed="#handleKeyInput">
-            <Menu text="Control">
-                <MenuItem text="Reset" onAction="#resetConfirmation"/>
-            </Menu>
-        </MenuBar>
+<!--        <MenuBar useSystemMenuBar="true" onKeyPressed="#handleKeyInput">-->
+<!--            <Menu text="Control">-->
+<!--                <MenuItem text="Reset" onAction="#resetConfirmation"/>-->
+<!--            </Menu>-->
+<!--        </MenuBar>-->
         <HBox fx:id="hbox" spacing="10" alignment="CENTER">
             <VBox spacing="30" alignment="CENTER">
                 <padding>
@@ -54,7 +54,7 @@
                 </padding>
                 <TextArea fx:id="lapsTextArea"
                           editable="false"
-                          prefWidth="420"
+                          prefWidth="350"
                           prefHeight="400"
                           maxWidth="Infinity"
                           focusTraversable="false"

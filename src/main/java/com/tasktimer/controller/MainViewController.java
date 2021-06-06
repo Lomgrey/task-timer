@@ -92,7 +92,7 @@ public class MainViewController {
     private void updateCyclesView(Collection<? extends Duration> fullList) {
         if (fullList.isEmpty()) return;
         var formattedPoints = EntryStream.of(List.copyOf(fullList))
-                .mapKeyValue((i, d) -> format("Lap %d:\t%s", i + 1, toFormatView(d)))
+                .mapKeyValue((i, d) -> toFormatView(d))
                 .toList();
         lapsTextArea.setText(String.join("\n", formattedPoints) + "\n"); // todo: fix it for scroll down
         lapsTextArea.setScrollTop(Double.MAX_VALUE);
@@ -175,12 +175,6 @@ public class MainViewController {
         cycleRepository.resetToday();
         stopwatch.reset();
         timerLabel.setText(toFormatView(Duration.ZERO));
-    }
-
-    public void handleKeyInput(KeyEvent keyEvent) {
-        if (keyEvent.isControlDown() && keyEvent.getCode() == KeyCode.R) {
-            resetConfirmation();
-        }
     }
 
     /** COPY TO CLIPBOARD */
