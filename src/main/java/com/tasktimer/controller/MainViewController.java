@@ -3,10 +3,10 @@ package com.tasktimer.controller;
 import com.tasktimer.animation.PopUp;
 import com.tasktimer.animation.PopUpAnimation;
 import com.tasktimer.animation.PopUpType;
-import com.tasktimer.repository.CycleRepository;
+import com.tasktimer.repository.LapRepository;
 import com.tasktimer.repository.DaysInfoRepository;
 import com.tasktimer.repository.TimePointRepository;
-import com.tasktimer.repository.factory.CycleRepositoryFactory;
+import com.tasktimer.repository.factory.LapRepositoryFactory;
 import com.tasktimer.repository.factory.DaysInfoRepositoryFactory;
 import com.tasktimer.repository.factory.TimeRepositoryFactory;
 import com.tasktimer.repository.local.DayInfo;
@@ -50,13 +50,13 @@ public class MainViewController {
     private StopwatchFX stopwatch;
 
     private TimePointRepository<Duration> timePointRepository;
-    private CycleRepository<Duration> cycleRepository;
+    private LapRepository<Duration> lapRepository;
     private DaysInfoRepository daysInfoRepository;
 
     public void initialize() {
         stopwatch = new StopwatchFX(timerLabel);
         timePointRepository = TimeRepositoryFactory.getInstance();
-        cycleRepository = CycleRepositoryFactory.getInstance();
+        lapRepository = LapRepositoryFactory.getInstance();
         daysInfoRepository = DaysInfoRepositoryFactory.getInstance();
 
         loadTodayInfoAndUpdateView();
@@ -84,9 +84,9 @@ public class MainViewController {
     }
 
     private void registryTimePointsAreaUpdate() {
-        cycleRepository.addListener((fullList, newVal) -> {
-            updateCyclesView(fullList);
-        });
+        lapRepository.addListener(
+                (fullList, newVal) -> updateCyclesView(fullList)
+        );
     }
 
     private void updateCyclesView(Collection<? extends Duration> fullList) {
@@ -117,9 +117,9 @@ public class MainViewController {
     }
 
     private void registryCurrentLapUpdate() {
-        stopwatch.bindTime(currentDuration -> {
-            currentLapLabel.setText(toFormatView(currentDuration.subtract(lastLapPoint)));
-        });
+        stopwatch.bindTime(currentDuration ->
+                currentLapLabel.setText(toFormatView(currentDuration.subtract(lastLapPoint)))
+        );
     }
 
     public void stopwatchControl(Event event) {
@@ -153,7 +153,7 @@ public class MainViewController {
         lastLapPoint = stopPoint;
 
         timePointRepository.addPoint(stopPoint);
-        cycleRepository.addLap(lapDuration);
+        lapRepository.addLap(lapDuration);
     }
 
     public void resetConfirmation() {
@@ -172,7 +172,7 @@ public class MainViewController {
     private void reset() {
         lastLapPoint = Duration.ZERO;
         timePointRepository.resetToday();
-        cycleRepository.resetToday();
+        lapRepository.resetToday();
         stopwatch.reset();
         timerLabel.setText(toFormatView(Duration.ZERO));
     }

@@ -1,6 +1,6 @@
 package com.tasktimer.repository.local;
 
-import com.tasktimer.repository.CycleRepository;
+import com.tasktimer.repository.LapRepository;
 import com.tasktimer.repository.DaysInfoRepository;
 import com.tasktimer.util.TimeAction;
 import javafx.util.Duration;
@@ -12,14 +12,14 @@ import java.util.List;
 import static com.tasktimer.util.TimeAction.MINUS;
 import static com.tasktimer.util.TimeAction.PLUS;
 
-public class LocalFileCycleRepository implements CycleRepository<Duration> {
+public class LocalFileLapRepository implements LapRepository<Duration> {
     private final DaysInfoRepository daysInfoRepository;
 
     private final List<CollectionAddValueListener<Duration>> listeners = new ArrayList<>();
 
     private final DayInfo todayInfo; // todo: decide what to do when new day stared
 
-    public LocalFileCycleRepository(DaysInfoRepository daysInfoRepository) {
+    public LocalFileLapRepository(DaysInfoRepository daysInfoRepository) {
         this.daysInfoRepository = daysInfoRepository;
 
         todayInfo = daysInfoRepository.getTodayInfo();
