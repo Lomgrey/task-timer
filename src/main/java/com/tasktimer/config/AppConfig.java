@@ -11,4 +11,5 @@ public final class AppConfig {
     public static final String APP_NAME = "Task Timer";
 
     public static final String ROOT_FXML = "scene.fxml";
+    public static final String EDIT_FXML = "edit-history-scene.fxml";
 }

@@ -23,6 +23,15 @@ public class DayInfo {
     private List<Duration> cycles;
     private Duration dayDuration;
 
+    public DayInfo setCycles(List<Duration> cycles) {
+        this.cycles = cycles;
+        var fullDuration = cycles.stream()
+                .mapToDouble(Duration::toMillis)
+                .sum();
+        dayDuration = Duration.millis(fullDuration);
+        return this;
+    }
+
     public static DayInfo defaultInstance() {
         return DayInfo.builder()
                 .date(LocalDate.now())

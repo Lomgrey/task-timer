@@ -1,0 +1,39 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<?import javafx.scene.control.*?>
+<?import javafx.scene.layout.*?>
+
+<?import javafx.geometry.Insets?>
+<AnchorPane xmlns="http://javafx.com/javafx"
+            xmlns:fx="http://javafx.com/fxml"
+            fx:controller="com.tasktimer.controller.EditHistoryScene"
+            prefHeight="200.0" prefWidth="300.0">
+    <VBox>
+        <TabPane>
+            <Tab text="add new">
+                <VBox spacing="10" alignment="CENTER">
+                    <HBox spacing="10" alignment="CENTER">
+                        <padding>
+                            <Insets top="10" right="10" left="10"/>
+                        </padding>
+                        <HBox spacing="2" alignment="CENTER">
+                            <TextField fx:id="hoursField" onKeyTyped="#changeAddBtnText"/>
+                            <Label text="hours"/>
+                        </HBox>
+
+                        <HBox spacing="2" alignment="CENTER">
+                            <TextField fx:id="minutesField" onKeyTyped="#changeAddBtnText"/>
+                            <Label text="minutes"/>
+                        </HBox>
+                    </HBox>
+                    <Button fx:id="addBtn" onAction="#addLap" prefWidth="200">Add</Button>
+                </VBox>
+            </Tab>
+            <Tab text="remove">
+                <VBox alignment="CENTER">
+                    <Label>Nothing here for now</Label>
+                </VBox>
+            </Tab>
+        </TabPane>
+    </VBox>
+</AnchorPane>

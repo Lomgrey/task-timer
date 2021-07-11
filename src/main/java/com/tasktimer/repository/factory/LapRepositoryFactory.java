@@ -6,14 +6,14 @@ import javafx.util.Duration;
 
 public class LapRepositoryFactory {
 
-    private final static LapRepository<Duration> CYCLE_REPOSITORY;
+    private final static LapRepository<Duration> LAP_REPOSITORY;
     static {
-        CYCLE_REPOSITORY = new LocalFileLapRepository(
+        LAP_REPOSITORY = new LocalFileLapRepository(
                 DaysInfoRepositoryFactory.getInstance());
     }
 
     public synchronized static LapRepository<Duration> getInstance() {
-        return CYCLE_REPOSITORY;
+        return LAP_REPOSITORY;
     }
 
 }

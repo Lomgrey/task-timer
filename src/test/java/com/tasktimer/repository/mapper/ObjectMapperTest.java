@@ -52,13 +52,12 @@ class ObjectMapperTest {
     }
 
     @Test
-    void name() {
-        Duration a = Duration.millis(1233123);
-        Duration b = Duration.millis(12312);
-        Duration d = Duration.millis(222);
+    void prettySerialisation() throws JsonProcessingException {
+        String s = "2021-05-12";
+        JsonType instance = new JsonType().setDate(LocalDate.parse(s));
 
-        System.out.println("a + b =" + a.add(b));
-        System.out.println("a + b + d = " + a.add(b).add(d));
+        String s1 = mapper.writeValueAsString(instance);
+        System.out.println(s1);
     }
 
     public static class JsonType {

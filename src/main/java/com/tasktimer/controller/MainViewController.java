@@ -3,6 +3,9 @@ package com.tasktimer.controller;
 import com.tasktimer.animation.PopUp;
 import com.tasktimer.animation.PopUpAnimation;
 import com.tasktimer.animation.PopUpType;
+import com.tasktimer.feature.edit.EditAction;
+import com.tasktimer.feature.edit.TimeHistoryEditor;
+import com.tasktimer.feature.edit.TimeHistoryEditorFactory;
 import com.tasktimer.repository.LapRepository;
 import com.tasktimer.repository.DaysInfoRepository;
 import com.tasktimer.repository.TimePointRepository;
@@ -13,7 +16,9 @@ import com.tasktimer.repository.local.DayInfo;
 import com.tasktimer.stopwatch.StopwatchFX;
 import com.tasktimer.util.DurationFX;
 import javafx.event.Event;
+import javafx.fxml.FXMLLoader;
 import javafx.scene.Cursor;
+import javafx.scene.Parent;
 import javafx.scene.Scene;
 import javafx.scene.control.*;
 import javafx.scene.input.*;
@@ -22,12 +27,17 @@ import javafx.scene.layout.HBox;
 import javafx.scene.paint.Color;
 import javafx.stage.Stage;
 import javafx.util.Duration;
+import lombok.SneakyThrows;
 import one.util.streamex.EntryStream;
 
+import java.net.URL;
+import java.util.ArrayList;
 import java.util.Collection;
 import java.util.List;
 import java.util.Optional;
 
+import static com.tasktimer.config.AppConfig.*;
+import static com.tasktimer.config.AppConfig.INIT_ROOT_HEIGHT;
 import static com.tasktimer.util.DurationFX.toFormatView;
 import static java.lang.String.format;
 import static javafx.scene.input.KeyCode.ENTER;
@@ -84,9 +94,12 @@ public class MainViewController {
     }
 
     private void registryTimePointsAreaUpdate() {
-        lapRepository.addListener(
-                (fullList, newVal) -> updateCyclesView(fullList)
-        );
+        lapRepository.addListener((fullList, newVal) -> {
+            var todayInfo = daysInfoRepository.getTodayInfo();
+            todayInfo.setCycles(new ArrayList<>(fullList));
+
+            updateView(todayInfo);
+        });
     }
 
     private void updateCyclesView(Collection<? extends Duration> fullList) {
@@ -112,8 +125,25 @@ public class MainViewController {
                 switchStopwatch();
             } else if (Shortcuts.RESET.match(ke)) {
                 resetConfirmation();
+            } else if (Shortcuts.EDIT.match(ke)) {
+                loadEditScene();
             }
         });
+    }
+
+    @SneakyThrows
+    private void loadEditScene() {
+        // todo: Move to loader
+        var editStage = new Stage();
+        URL resource = getClass().getClassLoader().getResource(EDIT_FXML);
+        FXMLLoader loader = new FXMLLoader(resource);
+        Parent root = loader.load();
+
+        Scene scene = new Scene(root);
+        editStage.setScene(scene);
+
+        editStage.show();
+
     }
 
     private void registryCurrentLapUpdate() {
@@ -147,8 +177,10 @@ public class MainViewController {
     }
 
     private void stopStopwatch() {
-        controlBtn.setText("Start");
         var stopPoint = stopwatch.stop();
+
+        controlBtn.setText("Start");
+
         Duration lapDuration = stopPoint.subtract(lastLapPoint);
         lastLapPoint = stopPoint;
 
@@ -225,4 +257,17 @@ public class MainViewController {
                 .ifPresent(label -> label.setTextFill(Color.gray(0)));
         stage.getScene().setCursor(Cursor.DEFAULT);
     }
+
+    /** EDIT TIME LAPS */
+
+    private TimeHistoryEditor editor = TimeHistoryEditorFactory.getInstance();
+
+    public void addNewLap(Duration item) {
+        editor.edit(EditAction.ADD, item);
+    }
+
+    public void deleteLap(Duration item) {
+        editor.edit(EditAction.REMOVE, item);
+    }
+
 }
