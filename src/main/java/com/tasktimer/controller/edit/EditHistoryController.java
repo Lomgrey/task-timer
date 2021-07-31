@@ -1,4 +1,4 @@
-package com.tasktimer.controller;
+package com.tasktimer.controller.edit;
 
 import com.tasktimer.repository.LapRepository;
 import com.tasktimer.repository.factory.LapRepositoryFactory;
@@ -8,7 +8,7 @@ import javafx.scene.control.TextField;
 import javafx.scene.input.KeyEvent;
 import javafx.util.Duration;
 
-public class EditHistoryScene {
+public class EditHistoryController {
     public TextField hoursField;
     public TextField minutesField;
     public Button addBtn;
