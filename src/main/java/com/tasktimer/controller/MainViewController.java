@@ -31,6 +31,7 @@ import lombok.SneakyThrows;
 import one.util.streamex.EntryStream;
 
 import java.net.URL;
+import java.time.LocalDate;
 import java.util.ArrayList;
 import java.util.Collection;
 import java.util.List;
@@ -103,7 +104,6 @@ public class MainViewController {
     }
 
     private void updateCyclesView(Collection<? extends Duration> fullList) {
-        if (fullList.isEmpty()) return;
         var formattedPoints = EntryStream.of(List.copyOf(fullList))
                 .mapKeyValue((i, d) -> toFormatView(d))
                 .toList();
@@ -202,11 +202,19 @@ public class MainViewController {
     }
 
     private void reset() {
-        lastLapPoint = Duration.ZERO;
-        timePointRepository.resetToday();
-        lapRepository.resetToday();
-        stopwatch.reset();
-        timerLabel.setText(toFormatView(Duration.ZERO));
+        DayInfo todayInfo = daysInfoRepository.getDayInfo(LocalDate.now());
+        if (todayInfo != null) { // reset laps for today
+            timePointRepository.resetToday();
+            lapRepository.resetToday();
+            stopwatch.reset();
+            timerLabel.setText(toFormatView(Duration.ZERO));
+            lastLapPoint = Duration.ZERO;
+        } else { // reset info from another
+            stopwatch.reset();
+            timerLabel.setText(toFormatView(Duration.ZERO));
+            lastLapPoint = Duration.ZERO;
+            loadTodayInfoAndUpdateView();
+        }
     }
 
     /** COPY TO CLIPBOARD */

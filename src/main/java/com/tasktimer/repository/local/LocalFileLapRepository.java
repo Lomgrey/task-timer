@@ -17,7 +17,7 @@ public class LocalFileLapRepository implements LapRepository<Duration> {
 
     private final List<CollectionAddValueListener<Duration>> listeners = new ArrayList<>();
 
-    private final DayInfo todayInfo; // todo: decide what to do when new day stared
+    private DayInfo todayInfo; // todo: decide what to do when new day stared
 
     public LocalFileLapRepository(DaysInfoRepository daysInfoRepository) {
         this.daysInfoRepository = daysInfoRepository;
@@ -57,7 +57,9 @@ public class LocalFileLapRepository implements LapRepository<Duration> {
 
     @Override
     public void resetToday() {
-        // todo
+        daysInfoRepository.write(DayInfo.defaultInstance());
+        todayInfo = daysInfoRepository.getTodayInfo();
+        notifyListeners(todayInfo.getCycles(), Duration.ZERO);
     }
 
     private void updateDayDuration(TimeAction action, Duration time) {
@@ -81,7 +83,11 @@ public class LocalFileLapRepository implements LapRepository<Duration> {
     }
 
     private void notifyListeners(Duration added) {
-        listeners.forEach(listener -> listener.onChange(todayInfo.getCycles(), added));
+        notifyListeners(todayInfo.getCycles(), added);
+    }
+
+    private void notifyListeners(List<Duration> laps, Duration added) {
+        listeners.forEach(listener -> listener.onChange(laps, added));
     }
 
 }

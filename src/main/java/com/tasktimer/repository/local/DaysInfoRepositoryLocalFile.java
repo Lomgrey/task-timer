@@ -20,7 +20,7 @@ public class DaysInfoRepositoryLocalFile implements DaysInfoRepository {
     private final File daysInfoFile;
     private final ObjectMapper mapper;
 
-    private final Map<LocalDate, DayInfo> days;
+    private Map<LocalDate, DayInfo> days;
 
     public DaysInfoRepositoryLocalFile(File daysInfoFile, ObjectMapper mapper) {
         this.daysInfoFile = daysInfoFile;
@@ -80,8 +80,13 @@ public class DaysInfoRepositoryLocalFile implements DaysInfoRepository {
     private void save() {
         try {
             mapper.writeValue(daysInfoFile, days.values());
+            reloadDays();
         } catch (IOException e) {
             e.printStackTrace();
         }
+    }
+
+    private void reloadDays() {
+        days = loadDaysInfo();
     }
 }
